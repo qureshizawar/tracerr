@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     setup(
         name='tracerr',
-        version='0.1.0',
+        version='0.0.1',
         description='A simple raytracing program',
         long_description=long_description,
         long_description_content_type='text/markdown',
@@ -94,6 +94,7 @@ if __name__ == "__main__":
             'Topic :: Software Development',
             'License :: OSI Approved :: MIT License',
             'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
         ],
         ext_modules=[CMakeExtension('tracerr')],
         cmdclass=dict(build_ext=CMakeBuild),
