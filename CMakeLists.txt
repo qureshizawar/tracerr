@@ -31,6 +31,8 @@ ADD_SUBDIRECTORY(proto)
 # include build directory since we are generating the protobuf C++ header and source on it
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
+include_directories( ${CMAKE_SOURCE_DIR}/include)
+
 if( PYBIND )
   # python module
   add_subdirectory(pybind11)
