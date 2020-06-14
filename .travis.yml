@@ -79,7 +79,7 @@ jobs:
       name: Build and deploy Windows wheels
       env:
         #- CIBW_BEFORE_BUILD="pip install cmake && bash ./init.sh && bash ./init_proto_win.sh"
-        - CIBW_BEFORE_BUILD="choco install curl make unzip cmake protoc && bash ./init.sh"
+        - CIBW_BEFORE_BUILD="choco install curl make unzip cmake && bash ./init.sh && bash ./init_proto_win.sh"
         - CIBW_BUILD=cp36*
       os: windows
       language: shell
