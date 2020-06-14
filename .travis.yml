@@ -49,10 +49,11 @@ jobs:
       env:
         #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
         #- CIBW_BEFORE_BUILD="pip install cmake"
-        - CIBW_BUILD=cp36* cp37*
+        - CIBW_BUILD=cp36*
       services: docker
       install:
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init.sh
         - bash ./init_proto.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
@@ -63,11 +64,12 @@ jobs:
       name: Build and deploy macOS wheels
       env:
         #- CIBW_BEFORE_BUILD="pip install cmake"
-        - CIBW_BUILD=cp36* cp37*
+        - CIBW_BUILD=cp36*
       os: osx
       language: shell
       install:
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init.sh
         - bash ./init_proto_osx.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
@@ -95,6 +97,7 @@ jobs:
         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
       install:
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init.sh
         - bash ./init_proto_win.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
