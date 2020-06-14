@@ -52,8 +52,8 @@ jobs:
         #- CIBW_BUILD=cp36*
       services: docker
       install:
-        - bash ./init_proto.sh
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init_proto.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
@@ -66,9 +66,9 @@ jobs:
         #- CIBW_BUILD=cp36*
       os: osx
       language: shell
-      install: 
-        - bash ./init_proto.sh
+      install:
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init_proto_osx.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
@@ -89,12 +89,13 @@ jobs:
         #- ./bootstrap-vcpkg.sh
         #- ./vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
-        - choco install curl make unzip cmake protoc 
+        - choco install curl make unzip cmake protoc
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
-        - bash ./init_proto.sh
-      install: python3 -m pip install cibuildwheel==1.4.1
+      install:
+        - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init_proto_win.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
