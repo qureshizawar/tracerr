@@ -78,10 +78,11 @@ jobs:
       name: Build and deploy Windows wheels
       env:
         #- CIBW_BEFORE_BUILD="pip install cmake"
-        #- CIBW_BUILD=cp36*
+        - CIBW_BUILD=cp36*
       os: windows
       language: shell
       before_install:
+        - vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
         - choco install protoc
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
