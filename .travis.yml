@@ -84,8 +84,10 @@ jobs:
       before_install:
         - git clone https://github.com/Microsoft/vcpkg.git
         - cd vcpkg
-        - .\bootstrap-vcpkg.bat
-        - .\vcpkg install protobuf protobuf:x64-windows
+        #- .\bootstrap-vcpkg.bat
+        #- .\vcpkg install protobuf protobuf:x64-windows
+        - ./bootstrap-vcpkg.sh
+        - ./vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
         - choco install protoc
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
