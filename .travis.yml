@@ -79,6 +79,7 @@ jobs:
       name: Build and deploy Windows wheels
       env:
         #- CIBW_BEFORE_BUILD="pip install cmake && bash ./init.sh && bash ./init_proto_win.sh"
+        - CIBW_BEFORE_BUILD="choco install curl make unzip cmake protoc && bash ./init.sh"
         - CIBW_BUILD=cp36*
       os: windows
       language: shell
@@ -90,11 +91,11 @@ jobs:
         #- ./bootstrap-vcpkg.sh
         #- ./vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
-        - choco install curl make unzip cmake protoc
+        #- choco install curl make unzip cmake protoc
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
-        - bash ./init.sh
+        #- bash ./init.sh
         #- bash ./init_proto_win.sh
       install:
         - python3 -m pip install cibuildwheel==1.4.1
