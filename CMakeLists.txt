@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.12)
 project(tracerr)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -21,6 +21,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+include_directories(${CMAKE_SOURCE_DIR}/include)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR}/protobuf-install)
+
 # add protobuf library
 INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf 3.6.1 REQUIRED)
@@ -31,7 +34,37 @@ ADD_SUBDIRECTORY(proto)
 # include build directory since we are generating the protobuf C++ header and source on it
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-if( CPP_exe )
+
+if( PYBIND )
+  # python module
+  add_subdirectory(pybind11)
+  pybind11_add_module(tracerr
+          src/main_py.cpp
+          src/Shape.h
+          src/Image.cpp
+          src/Image.h
+          src/Sphere.cpp
+          src/Sphere.h
+          src/ImageFile.h
+          src/Material.h
+          src/Light.h
+          src/Render.h
+          src/Render.cpp
+          src/Triangle.cpp
+          src/Triangle.h
+          src/Rectangle.cpp
+          src/Rectangle.h
+          src/ObjLoader.cpp
+          src/ObjLoader.h
+          src/ThreadPool.h
+          src/SceneManager.cpp
+          src/SceneManager.h)
+
+  target_link_libraries(tracerr PRIVATE pybind11::module)
+  target_link_libraries(tracerr PRIVATE Threads::Threads)
+  target_link_libraries(tracerr PRIVATE proto ${PROTOBUF_LIBRARIES})
+
+else()
   # main executable
   ADD_EXECUTABLE(tracerr src/main.cpp src/Shape.h src/Image.cpp src/Image.h src/Sphere.cpp src/Sphere.h src/ImageFile.h src/Material.h src/Light.h src/Render.h src/Render.cpp src/Triangle.cpp src/Triangle.h src/Rectangle.cpp src/Rectangle.h src/ObjLoader.cpp src/ObjLoader.h src/ThreadPool.h src/SceneManager.cpp src/SceneManager.h)
 
@@ -80,34 +113,5 @@ if( CPP_exe )
   if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
   endif()
-
-else()
-  # python module
-  add_subdirectory(pybind11)
-  pybind11_add_module(tracerr
-          src/main_py.cpp
-          src/Shape.h
-          src/Image.cpp
-          src/Image.h
-          src/Sphere.cpp
-          src/Sphere.h
-          src/ImageFile.h
-          src/Material.h
-          src/Light.h
-          src/Render.h
-          src/Render.cpp
-          src/Triangle.cpp
-          src/Triangle.h
-          src/Rectangle.cpp
-          src/Rectangle.h
-          src/ObjLoader.cpp
-          src/ObjLoader.h
-          src/ThreadPool.h
-          src/SceneManager.cpp
-          src/SceneManager.h)
-
-  target_link_libraries(tracerr PRIVATE pybind11::module)
-  target_link_libraries(tracerr PRIVATE Threads::Threads)
-  target_link_libraries(tracerr PRIVATE proto ${PROTOBUF_LIBRARIES})
 
 endif()
