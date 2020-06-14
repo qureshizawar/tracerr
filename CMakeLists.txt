@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.12)
 project(tracerr)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -22,7 +22,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/protobuf-install)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR}/protobuf-install)
 
 # add protobuf library
 INCLUDE(FindProtobuf)
