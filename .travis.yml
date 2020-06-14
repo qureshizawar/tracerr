@@ -89,7 +89,7 @@ jobs:
         #- ./bootstrap-vcpkg.sh
         #- ./vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
-        - choco install protoc
+        - choco install autoconf automake libtool curl make g++ unzip cmake protoc 
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
