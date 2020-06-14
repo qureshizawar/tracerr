@@ -17,7 +17,8 @@ install:
  - pip3 install ./dist/*.whl
 
 script:
- - #pytest -q ./tests/tests.py
+ #- pytest -q ./tests/tests.py
+ - python -c 'import tracerr; tracerr.GenerateExample("./test"); tracerr.RenderScene("./test");'
 
 stages:
   - test
@@ -51,8 +52,8 @@ jobs:
         #- CIBW_BUILD=cp36*
       services: docker
       install:
-        - python3 -m pip install cibuildwheel==1.4.1
         - bash ./init_proto.sh
+        - python3 -m pip install cibuildwheel==1.4.1
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
@@ -66,8 +67,8 @@ jobs:
       os: osx
       language: shell
       install: 
-        - python3 -m pip install cibuildwheel==1.4.1
         - bash ./init_proto.sh
+        - python3 -m pip install cibuildwheel==1.4.1
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
