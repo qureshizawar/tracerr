@@ -3,7 +3,7 @@ python:
  - 3.6
  - 3.7
 
-dist: bionic
+dist: focal
 addons:
   apt:
     update: true
@@ -12,7 +12,7 @@ addons:
     - python3-dev python3-pip python3-tk python3-lxml python3-six python3-setuptools python3-wheel
 
 install:
- - bash ./init_proto.sh
+ #- bash ./init_proto.sh
  - python3 setup.py bdist_wheel
  - pip3 install ./dist/*.whl
 
@@ -37,7 +37,7 @@ jobs:
     # Deploy source distribution
     - stage: deploy
       name: Deploy source distribution
-      install: skip
+      install: skip #./init_proto.sh
       script: python3 setup.py sdist --formats=gztar
       after_success: |
         python3 -m pip install twine
@@ -52,6 +52,7 @@ jobs:
       services: docker
       install:
         - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init_proto.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
@@ -64,29 +65,32 @@ jobs:
         #- CIBW_BUILD=cp36*
       os: osx
       language: shell
-      install: python3 -m pip install cibuildwheel==1.4.1
+      install: 
+        - python3 -m pip install cibuildwheel==1.4.1
+        - bash ./init_proto.sh
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
         python3 -m pip install twine
         python3 -m twine upload --skip-existing wheelhouse/*.whl
     # Deploy on windows
-    #- stage: deploy
-    #  name: Build and deploy Windows wheels
-    #  env:
+    - stage: deploy
+      name: Build and deploy Windows wheels
+      env:
         #- CIBW_BEFORE_BUILD="pip install cmake"
-    #    - CIBW_BUILD=cp36*
-    #  os: windows
-    #  language: shell
-    #  before_install:
-    #    - choco install python --version 3.6.0
-    #    - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
-    #    # make sure it's on PATH as 'python3'
-    #    - ln -s /c/Python36/python.exe /c/Python36/python3.exe
-    #  install: python3 -m pip install cibuildwheel==1.4.1
-    #  script: python3 -m cibuildwheel --output-dir wheelhouse
-    #  after_success: |
-    #    python3 -m pip install twine
-    #    python3 -m twine upload --skip-existing wheelhouse/*.whl
+        #- CIBW_BUILD=cp36*
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6.0
+        - choco install protoc
+        - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
+        # make sure it's on PATH as 'python3'
+        - ln -s /c/Python36/python.exe /c/Python36/python3.exe
+      install: python3 -m pip install cibuildwheel==1.4.1
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing wheelhouse/*.whl
 env:
   global:
     - TWINE_USERNAME=__token__
