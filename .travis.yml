@@ -47,7 +47,7 @@ jobs:
       name: Build and deploy Linux wheels
       env:
         #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
-        - CIBW_BEFORE_BUILD="yum install wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
+        - CIBW_BEFORE_BUILD="yum install -y wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
         - CIBW_BUILD=cp36*
       services: docker
       install:
@@ -62,7 +62,7 @@ jobs:
     - stage: deploy
       name: Build and deploy macOS wheels
       env:
-        - CIBW_BEFORE_BUILD="brew install cmake && bash ./init.sh && brew install protobuf" #bash ./init_proto_osx.sh"
+        - CIBW_BEFORE_BUILD="brew install cmake && brew install eigen && brew install protobuf" #bash ./init.sh && bash ./init_proto_osx.sh"
         - CIBW_BUILD=cp36*
       os: osx
       language: shell
