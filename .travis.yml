@@ -82,17 +82,18 @@ jobs:
       os: windows
       language: shell
       before_install:
-        - git clone https://github.com/Microsoft/vcpkg.git
-        - cd vcpkg
+        #- git clone https://github.com/Microsoft/vcpkg.git
+        #- cd vcpkg
         #- .\bootstrap-vcpkg.bat
         #- .\vcpkg install protobuf protobuf:x64-windows
-        - ./bootstrap-vcpkg.sh
-        - ./vcpkg install protobuf protobuf:x64-windows
+        #- ./bootstrap-vcpkg.sh
+        #- ./vcpkg install protobuf protobuf:x64-windows
         - choco install python --version 3.6.0
         - choco install protoc
         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
+        - bash ./init_proto.sh
       install: python3 -m pip install cibuildwheel==1.4.1
       script: python3 -m cibuildwheel --output-dir wheelhouse
       after_success: |
