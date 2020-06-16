@@ -1,0 +1,158 @@
+language: python
+python:
+ - 3.6
+
+dist: focal
+addons:
+  apt:
+    update: true
+    packages:
+    - git build-essential libprotobuf-dev protobuf-compiler libeigen3-dev
+    - python3-dev python3-pip python3-tk python3-lxml python3-six python3-setuptools python3-wheel
+
+install:
+ #- bash ./init_proto.sh
+ - python3 setup.py bdist_wheel
+ - pip3 install ./dist/*.whl
+
+script:
+ #- pytest -q ./tests/tests.py
+ - python -c 'import tracerr; tracerr.GenerateExample("./test"); tracerr.RenderScene("./test");'
+
+stages:
+  - test
+  # Only execute deployment stage on tagged commits, and from your repository
+  # (e.g. not PRs). Replace with your repo name.
+  - name: deploy
+    #if: tag IS PRESENT AND repo = qureshizawar/CUDA-quartic-solver
+    # To only build tags that look like vX.Y.Z:
+    #   if: tag =~ ^v\d+\.\d+\.\d+$ AND repo = CUDA-quartic-solver
+
+jobs:
+  include:
+    - os: linux
+      language: shell
+      name: Test on linux
+
+    # Deploy source distribution
+    - stage: deploy
+      name: Deploy source distribution
+      install: skip #./init_proto.sh
+      script: python3 setup.py sdist --formats=gztar
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing dist/*.tar.gz
+    # Deploy on linux
+    - stage: deploy
+      name: Build and deploy Linux cp35 wheels
+      env:
+        #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
+        - CIBW_BEFORE_BUILD="yum install -y wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
+        - CIBW_BUILD=cp35*
+      services: docker
+      install:
+        - python3 -m pip install cibuildwheel==1.4.1
+        #- bash ./init.sh
+        #- bash ./init_proto.sh
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing wheelhouse/*.whl
+    # Deploy on linux
+    - stage: deploy
+      name: Build and deploy Linux cp36 wheels
+      env:
+        #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
+        - CIBW_BEFORE_BUILD="yum install -y wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
+        - CIBW_BUILD=cp36*
+      services: docker
+      install:
+        - python3 -m pip install cibuildwheel==1.4.1
+        #- bash ./init.sh
+        #- bash ./init_proto.sh
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing wheelhouse/*.whl
+    # Deploy on linux
+    - stage: deploy
+      name: Build and deploy Linux cp37 wheels
+      env:
+        #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
+        - CIBW_BEFORE_BUILD="yum install -y wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
+        - CIBW_BUILD=cp37*
+      services: docker
+      install:
+        - python3 -m pip install cibuildwheel==1.4.1
+        #- bash ./init.sh
+        #- bash ./init_proto.sh
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing wheelhouse/*.whl
+    # Deploy on linux
+    - stage: deploy
+      name: Build and deploy Linux cp38 wheels
+      env:
+        #- CIBW_MANYLINUX_X86_64_IMAGE="manylinux1"
+        - CIBW_BEFORE_BUILD="yum install -y wget && pip install cmake && bash ./init.sh && bash ./init_proto.sh"
+        - CIBW_BUILD=cp38*
+      services: docker
+      install:
+        - python3 -m pip install cibuildwheel==1.4.1
+        #- bash ./init.sh
+        #- bash ./init_proto.sh
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success: |
+        python3 -m pip install twine
+        python3 -m twine upload --skip-existing wheelhouse/*.whl
+#     # Deploy on mac
+#     - stage: deploy
+#       name: Build and deploy macOS wheels
+#       env:
+#         - CIBW_BEFORE_BUILD="bash ./init.sh && bash ./init_proto_osx.sh" #bash ./init.sh && bash ./init_proto_osx.sh"
+#         - CIBW_BUILD=cp36*
+#       os: osx
+#       language: shell
+#       install:
+#         - python3 -m pip install cibuildwheel==1.4.1
+#         #- bash ./init.sh
+#         #- bash ./init_proto_osx.sh
+#       script: python3 -m cibuildwheel --output-dir wheelhouse
+#       after_success: |
+#         python3 -m pip install twine
+#         python3 -m twine upload --skip-existing wheelhouse/*.whl
+#     # Deploy on windows
+#     - stage: deploy
+#       name: Build and deploy Windows wheels
+#       env:
+#         #- CIBW_BEFORE_BUILD="pip install cmake && bash ./init.sh && bash ./init_proto_win.sh"
+#         - CIBW_BEFORE_BUILD="choco install curl make unzip cmake && bash ./init.sh && bash ./init_proto_win.sh"
+#         - CIBW_BUILD=cp36*
+#       os: windows
+#       language: shell
+#       before_install:
+#         #- git clone https://github.com/Microsoft/vcpkg.git
+#         #- cd vcpkg
+#         #- .\bootstrap-vcpkg.bat
+#         #- .\vcpkg install protobuf protobuf:x64-windows
+#         #- ./bootstrap-vcpkg.sh
+#         #- ./vcpkg install protobuf protobuf:x64-windows
+#         - choco install python --version 3.6.0
+#         #- choco install curl make unzip cmake protoc
+#         - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
+#         # make sure it's on PATH as 'python3'
+#         - ln -s /c/Python36/python.exe /c/Python36/python3.exe
+#         #- bash ./init.sh
+#         #- bash ./init_proto_win.sh
+#       install:
+#         - python3 -m pip install cibuildwheel==1.4.1
+#         #- bash ./init.sh
+#         #- bash ./init_proto_win.sh
+#       script: python3 -m cibuildwheel --output-dir wheelhouse
+#       after_success: |
+#         python3 -m pip install twine
+#         python3 -m twine upload --skip-existing wheelhouse/*.whl
+env:
+  global:
+    - TWINE_USERNAME=__token__

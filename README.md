@@ -1,4 +1,10 @@
 # Tracerr
+
+![GitHub](https://img.shields.io/github/license/qureshizawar/tracerr)
+[![Build Status](https://travis-ci.org/qureshizawar/tracerr.svg?branch=master)](https://travis-ci.org/qureshizawar/tracerr)
+[![PyPI](https://img.shields.io/pypi/v/tracerr)](https://pypi.org/project/tracerr/)
+[![Downloads](https://pepy.tech/badge/tracerr)](https://pepy.tech/project/tracerr)
+
 ## A simple raytracing program
 
 ![](./img/cover_multi.png)

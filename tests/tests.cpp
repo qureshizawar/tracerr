@@ -43,14 +43,14 @@ TEST(Image, ImageResize) {
   EXPECT_EQ(img_width * img_height * 3, img.pixels_->size());
 }
 
-TEST(Image, ImageResizeException){
+/*TEST(Image, ImageResizeException){
   int img_width = 100;
   int img_height = 200;
   Image img(img_width, img_height);
   img_width =  -1 * img_width * 3;
   img_height = img_height / 2;
   EXPECT_ANY_THROW(img.Resize(img_width, img_height));
-}
+}*/
 
 TEST(Image, DefaultColor) {
 

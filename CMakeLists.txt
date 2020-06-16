@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.12)
 project(tracerr)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -21,6 +21,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+include_directories(${CMAKE_SOURCE_DIR}/include)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR}/protobuf-install)
+
 # add protobuf library
 INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf 3.6.1 REQUIRED)
@@ -30,6 +33,7 @@ ADD_SUBDIRECTORY(proto)
 
 # include build directory since we are generating the protobuf C++ header and source on it
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
 
 if( PYBIND )
   # python module
